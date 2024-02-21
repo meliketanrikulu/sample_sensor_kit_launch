@@ -38,8 +38,10 @@ def launch_setup(context, *args, **kwargs):
             {
                 "input_topics": [
                     "/sensing/lidar/top/pointcloud",
-                    "/sensing/lidar/left/pointcloud",
-                    "/sensing/lidar/right/pointcloud",
+                    "/sensing/lidar/middle_right/pointcloud",
+                    "/sensing/lidar/middle_left/pointcloud",
+                    "/sensing/lidar/rear_right/pointcloud",
+                    "/sensing/lidar/rear_left/pointcloud",
                 ],
                 "output_frame": LaunchConfiguration("base_frame"),
                 "input_twist_topic_type": "twist",

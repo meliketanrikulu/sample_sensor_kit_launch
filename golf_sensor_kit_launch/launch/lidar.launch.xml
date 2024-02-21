@@ -1,6 +1,5 @@
 <launch>
   <arg name="launch_driver" default="true"/>
-  <arg name="host_ip" default="192.168.1.10"/>
   <arg name="use_concat_filter" default="true"/>
   <arg name="vehicle_id" default="$(env VEHICLE_ID default)"/>
   <arg name="vehicle_mirror_param_file"/>
@@ -13,28 +12,11 @@
       <push-ros-namespace namespace="top"/>
       <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLS128.launch.xml">
         <arg name="max_range" value="250.0"/>
-        <arg name="sensor_frame" value="velodyne_top"/>
-        <arg name="sensor_ip" value="192.168.1.201"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
-        <arg name="data_port" value="2368"/>
-        <arg name="scan_phase" value="300.0"/>
-        <arg name="launch_driver" value="$(var launch_driver)"/>
-        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
-        <arg name="container_name" value="pointcloud_container"/>
-      </include>
-    </group>
-
-    <group>
-      <push-ros-namespace namespace="left"/>
-      <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/>
-        <arg name="sensor_frame" value="velodyne_left"/>
-        <arg name="sensor_ip" value="192.168.1.202"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
-        <arg name="data_port" value="2369"/>
+        <arg name="sensor_frame" value="VLS128_TOP"/>
+        <arg name="sensor_ip" value="192.168.0.215"/>
+        <arg name="host_ip" value="192.168.0.49"/>
+        <arg name="data_port" value="2375"/>
         <arg name="scan_phase" value="180.0"/>
-        <arg name="cloud_min_angle" value="300"/>
-        <arg name="cloud_max_angle" value="60"/>
         <arg name="launch_driver" value="$(var launch_driver)"/>
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
         <arg name="container_name" value="pointcloud_container"/>
@@ -42,16 +24,13 @@
     </group>
 
     <group>
-      <push-ros-namespace namespace="right"/>
+      <push-ros-namespace namespace="middle_left"/>
       <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="5.0"/>
-        <arg name="sensor_frame" value="velodyne_right"/>
-        <arg name="sensor_ip" value="192.168.1.203"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
+        <arg name="sensor_frame" value="VLP16_ML"/>
+        <arg name="sensor_ip" value="192.168.1.210"/>
+        <arg name="host_ip" value="192.168.1.78"/>
         <arg name="data_port" value="2370"/>
         <arg name="scan_phase" value="180.0"/>
-        <arg name="cloud_min_angle" value="300"/>
-        <arg name="cloud_max_angle" value="60"/>
         <arg name="launch_driver" value="$(var launch_driver)"/>
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
         <arg name="container_name" value="pointcloud_container"/>
@@ -59,16 +38,41 @@
     </group>
 
     <group>
-      <push-ros-namespace namespace="rear"/>
+      <push-ros-namespace namespace="middle_right"/>
       <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
-        <arg name="max_range" value="1.5"/>
-        <arg name="sensor_frame" value="velodyne_rear"/>
-        <arg name="sensor_ip" value="192.168.1.204"/>
-        <arg name="host_ip" value="$(var host_ip)"/>
-        <arg name="data_port" value="2371"/>
+        <arg name="sensor_frame" value="VLP16_MR"/>
+        <arg name="sensor_ip" value="192.168.1.212"/>
+        <arg name="host_ip" value="192.168.1.78"/>
+        <arg name="data_port" value="2372"/>
         <arg name="scan_phase" value="180.0"/>
-        <arg name="cloud_min_angle" value="300"/>
-        <arg name="cloud_max_angle" value="60"/>
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+        <arg name="container_name" value="pointcloud_container"/>
+      </include>
+    </group>
+
+    <group>
+      <push-ros-namespace namespace="rear_right"/>
+      <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
+        <arg name="sensor_frame" value="VLP16_ML"/>
+        <arg name="sensor_ip" value="192.168.1.213"/>
+        <arg name="host_ip" value="192.168.1.78"/>
+        <arg name="data_port" value="2373"/>
+        <arg name="scan_phase" value="180.0"/>
+        <arg name="launch_driver" value="$(var launch_driver)"/>
+        <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
+        <arg name="container_name" value="pointcloud_container"/>
+      </include>
+    </group>
+
+    <group>
+      <push-ros-namespace namespace="rear_left"/>
+      <include file="$(find-pkg-share common_sensor_launch)/launch/velodyne_VLP16.launch.xml">
+        <arg name="sensor_frame" value="VLP16_ML"/>
+        <arg name="sensor_ip" value="192.168.1.214"/>
+        <arg name="host_ip" value="192.168.1.78"/>
+        <arg name="data_port" value="2374 "/>
+        <arg name="scan_phase" value="180.0"/>
         <arg name="launch_driver" value="$(var launch_driver)"/>
         <arg name="vehicle_mirror_param_file" value="$(var vehicle_mirror_param_file)"/>
         <arg name="container_name" value="pointcloud_container"/>
