@@ -115,6 +115,8 @@ def launch_setup(context, *args, **kwargs):
                         "cloud_min_angle",
                         "cloud_max_angle",
                         "dual_return_distance_threshold",
+                        "invalid_point_remove",
+                        "invalid_regions"
                     ),
                 },
             ],
@@ -283,6 +285,8 @@ def generate_launch_description():
     add_launch_arg("use_multithread", "False", "use multithread")
     add_launch_arg("use_intra_process", "False", "use ROS 2 component container communication")
     add_launch_arg("lidar_container_name", "nebula_node_container")
+    add_launch_arg("invalid_point_remove","True")
+    add_launch_arg("invalid_regions", "'[[12, 31110, 31495], [0, 3500, 6900], [1, 3400, 6500], [2, 3200, 4600], [3, 3200, 4600], [4, 3000, 4300], [5, 2950, 4050], [6, 3100, 3800], [0, 26000, 32200], [1, 26000, 32200], [2, 26000, 31000], [3, 26000, 30000], [4, 26000, 28000]]'")
 
     set_container_executable = SetLaunchConfiguration(
         "container_executable",
