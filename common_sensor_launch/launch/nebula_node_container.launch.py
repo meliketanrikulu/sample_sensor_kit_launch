@@ -25,6 +25,8 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.actions import LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
+from launch_ros.substitutions import FindPackageShare
+from launch_ros.parameter_descriptions import ParameterFile
 import yaml
 
 
@@ -62,6 +64,10 @@ def get_vehicle_mirror_info(context):
 
 
 def launch_setup(context, *args, **kwargs):
+    def load_composable_node_param(param_path):
+        with open(LaunchConfiguration(param_path).perform(context), "r") as f:
+            return yaml.safe_load(f)["/**"]["ros__parameters"]
+            
     def create_parameter_dict(*args):
         result = {}
         for x in args:
@@ -83,6 +89,12 @@ def launch_setup(context, *args, **kwargs):
     assert os.path.exists(
         sensor_calib_fp
     ), "Sensor calib file under calibration/ was not found: {}".format(sensor_calib_fp)
+
+    # Pointcloud preprocessor parameters
+    distortion_corrector_node_param = ParameterFile(
+        param_file=LaunchConfiguration("distortion_correction_node_param_path").perform(context),
+        allow_substs=True,
+    )
 
     nodes = []
 
@@ -153,7 +165,7 @@ def launch_setup(context, *args, **kwargs):
         )
     )
 
-    mirror_info = get_vehicle_mirror_info(context)
+    mirror_info = load_composable_node_param("vehicle_mirror_param_file")
     cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
     cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
     cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
@@ -181,11 +193,13 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::DistortionCorrectorComponent",
             name="distortion_corrector_node",
             remappings=[
-                ("~/input/twist", "/sensing/vehicle_velocity_converter/twist_with_covariance"),
-                ("~/input/imu", "/sensing/imu/imu_data"),
+                ("~/input/twist", "/sensing/gnss/sbg/ros/twist_with_covariance_stamped"),
+                ("~/input/imu", "/sensing/gnss/sbg/ros/imu/data"),
                 ("~/input/pointcloud", "mirror_cropped/pointcloud_ex"),
                 ("~/output/pointcloud", "rectified/pointcloud_ex"),
             ],
+            parameters=[distortion_corrector_node_param],
+            # parameters=[load_composable_node_param("distortion_corrector_node_param_file")],
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
         )
     )
@@ -259,6 +273,8 @@ def generate_launch_description():
             DeclareLaunchArgument(name, default_value=default_value, description=description)
         )
 
+    common_sensor_share_dir = get_package_share_directory("common_sensor_launch")
+
     add_launch_arg("sensor_model", description="sensor model name")
     add_launch_arg("config_file", "", description="sensor configuration file")
     add_launch_arg("launch_driver", "True", "do launch driver")
@@ -279,15 +295,23 @@ def generate_launch_description():
     add_launch_arg("frame_id", "lidar", "frame id")
     add_launch_arg("input_frame", LaunchConfiguration("base_frame"), "use for cropbox")
     add_launch_arg("output_frame", LaunchConfiguration("base_frame"), "use for cropbox")
-    add_launch_arg(
-        "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
-    )
     add_launch_arg("use_multithread", "False", "use multithread")
     add_launch_arg("use_intra_process", "False", "use ROS 2 component container communication")
     add_launch_arg("lidar_container_name", "nebula_node_container")
     add_launch_arg("invalid_point_remove","True")
     add_launch_arg("invalid_regions", "'[[12, 31110, 31495], [0, 3500, 6900], [1, 3400, 6500], [2, 3200, 4600], [3, 3200, 4600], [4, 3000, 4300], [5, 2950, 4050], [6, 3100, 3800], [0, 26000, 32200], [1, 26000, 32200], [2, 26000, 31000], [3, 26000, 30000], [4, 26000, 28000]]'")
-
+    add_launch_arg(
+        "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
+    )
+    add_launch_arg(
+        "distortion_correction_node_param_path",
+        os.path.join(
+            common_sensor_share_dir,
+            "config",
+            "distortion_corrector_node.param.yaml",
+        ),
+        description="path to parameter file of distortion correction node",
+    )
     set_container_executable = SetLaunchConfiguration(
         "container_executable",
         "component_container",

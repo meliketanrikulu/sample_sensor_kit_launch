@@ -1,0 +1,5 @@
+/**:
+  ros__parameters:
+    base_frame: base_link
+    use_imu: false
+    use_3d_distortion_correction: true
