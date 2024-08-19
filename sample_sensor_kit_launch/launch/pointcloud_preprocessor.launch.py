@@ -31,15 +31,13 @@ def launch_setup(context, *args, **kwargs):
         plugin="autoware::pointcloud_preprocessor::PointCloudConcatenateDataSynchronizerComponent",
         name="concatenate_data",
         remappings=[
-            ("~/input/twist", "/sensing/vehicle_velocity_converter/twist_with_covariance"),
+            ("~/input/twist", "/applanix/lvx_client/twist_with_covariance"),
             ("output", "concatenated/pointcloud"),
         ],
         parameters=[
             {
                 "input_topics": [
                     "/sensing/lidar/top/pointcloud_before_sync",
-                    "/sensing/lidar/left/pointcloud_before_sync",
-                    "/sensing/lidar/right/pointcloud_before_sync",
                 ],
                 "output_frame": LaunchConfiguration("base_frame"),
                 "input_twist_topic_type": "twist",

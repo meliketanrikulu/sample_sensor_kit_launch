@@ -1,10 +1,10 @@
 <launch>
   <!-- Params -->
   <arg name="launch_driver" default="true"/>
-  <arg name="model" default="VLS128"/>
+  <arg name="model" default="PandarXT32"/>
   <arg name="max_range" default="250.0"/>
   <arg name="min_range" default="0.5"/>
-  <arg name="sensor_frame" default="velodyne"/>
+  <arg name="sensor_frame" default="hesai"/>
   <arg name="return_mode" default="SingleStrongest"/>
   <arg name="sensor_ip" default="192.168.1.201"/>
   <arg name="host_ip" default="255.255.255.255"/>
