@@ -187,7 +187,7 @@ def launch_setup(context, *args, **kwargs):
             plugin="autoware::pointcloud_preprocessor::DistortionCorrectorComponent",
             name="distortion_corrector_node",
             remappings=[
-                ("~/input/twist", "/applanix/lvx_client/twist_with_covariance"),
+                ("~/input/twist", "/localization/twist_estimator/twist_with_covariance"),
                 ("~/input/imu", "/sensing/imu/imu_data"),
                 ("~/input/pointcloud", "mirror_cropped/pointcloud_ex"),
                 ("~/output/pointcloud", "rectified/pointcloud_ex"),
